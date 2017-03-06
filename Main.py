@@ -1,7 +1,27 @@
 #code released on github as "python-html" (with a MIT liscence) and sololearn code playground as "(add to me) python writing html" (plus a version number). Use, alter, "fork" and save as however you please, but don't claim credit for the stuff I've done
 
 import re #regex comparisons used for checking frame names are valid
-import xml.etree.ElementTree #build xml trees rather than do string manipulation
+#thanks to https://pymotw.com/3/xml.etree.ElementTree/create.html for showing a really good example, I've adapted their example to fit my needs
+from xml.etree import ElementTree as tree #build xml trees rather than do string manipulation
+
+top = tree.Element('top') 
+comment = tree.Comment('A comment') 
+top.append(comment) 
+child = tree.SubElement(top, 'child') 
+child.text = 'This child contains text.' 
+child_with_tail = tree.SubElement(top, 'child_with_tail') 
+child_with_tail.text = 'This child has text.' 
+child_with_tail.tail = 'And "tail" text.' 
+child_with_entity_ref = tree.SubElement(top, 'child_with_entity_ref') 
+child_with_entity_ref.text = 'This & that' 
+from xml.dom import minidom 
+#produces neat xml from messy xml
+def neatXml(element): 
+    #TODO: (low priority) find a way to how in the xml that it is UTF8 encoded
+    rough_string = tree.tostring(element, 'utf-8') 
+    reparsed = minidom.parseString(rough_string) 
+    return reparsed.toprettyxml(indent=" ")
+print(neatXml(top))
 
 #does some validation before calling makeLink (for HTML5 valid links)
 def makeLinkVal(href, text, target = False):
@@ -48,22 +68,17 @@ def makeLink(href, text, target = False):
 #Everything below here is only run when this file is called as a script
 #This files purpose is as a module, so everything beneath here is for testing the module
 if __name__=="__main__":
-    import time #for testing speed of functions
-    def timeTest():
-        start = time.clock()
-        makeLink("google.com","google")
-        finish = time.clock()
-        print("func makeLink time taken {}, start {}".format(str(finish - start), str(start)))
-    timeTest()
+    
     htmlATest = makeLinkValHTML4("google.com", "click here", "Frame1_2")
     htmlTemplate3 = "<!DOCTYPE html>\n<html>\n<head>\n<title>{0}</title>\n</head>\n<body>{1}</body>\n</html>"
     
     #print(htmlTemplate3.format("Python generated Site", openingParagraph))
     print(htmlATest)
-    #following function to be used as a second part of assert conditions only (asserts aren't usually run in live public code so we dont want this to print when no assert has happened)
+    #following function to be used as a second part of assert conditions only
     def assertSuccess(msg='assert OK'): 
         print (msg)
         return True
 
     expectedString = "<a href=\"google.com\", target=\"Frame1_2\">click here</a>"
     assert htmlATest == expectedString and assertSuccess("Anchor tag code with target is created as expected"), "Result from function \n {} \n does not match up with expectation \n {}".format(str(htmlATest), expectedString)
+#### END -- I've been having problems with double pasting in github (I probably need a better workflow than: select all from sololearn, copy, select all in github, paste)
