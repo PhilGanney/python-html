@@ -1,6 +1,7 @@
 #code released on github as "python-html" (with a MIT liscence) and sololearn code playground as "(add to me) python writing html" (plus a version number). Use, alter, "fork" and save as however you please, but don't claim credit for the stuff I've done
 
 import re #regex comparisons used for checking frame names are valid
+import xml.etree.ElementTree #build xml trees rather than do string manipulation
 
 #does some validation before calling makeLink (for HTML5 valid links)
 def makeLinkVal(href, text, target = False):
@@ -47,6 +48,13 @@ def makeLink(href, text, target = False):
 #Everything below here is only run when this file is called as a script
 #This files purpose is as a module, so everything beneath here is for testing the module
 if __name__=="__main__":
+    import time #for testing speed of functions
+    def timeTest():
+        start = time.clock()
+        makeLink("google.com","google")
+        finish = time.clock()
+        print("func makeLink time taken {}, start {}".format(str(finish - start), str(start)))
+    timeTest()
     htmlATest = makeLinkValHTML4("google.com", "click here", "Frame1_2")
     htmlTemplate3 = "<!DOCTYPE html>\n<html>\n<head>\n<title>{0}</title>\n</head>\n<body>{1}</body>\n</html>"
     
